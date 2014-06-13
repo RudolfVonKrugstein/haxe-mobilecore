@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension>
+
+  <classpath name="src" />
+
+  <section if="android">
+
+    <dependency name="haxe-mobilecore" path="dependencies/haxe-mobilecore" if="android" />
+    <android extension="de.woodengames.MobileCore" />
+
+  </section>
+</extension>
+

@@ -1,0 +1,14 @@
+{
+    "name"         : "haxe-mobilecore",
+    "url"          : "https://github.com/RudolfVonKrugstein/haxe-mobilecore.git",
+    "license"      : "MIT",
+    "tags"         : ["openfl", "extension", "banner", "ad", "mobilecore", "android"],
+    "description"  : "haxe-mobilecore is an Android extension for OpenFL for mobilecore service.",
+    "version"      : "0.1.0",
+    "releasenote"  : "Initial version",
+    "contributors" : ["RudolfVonKrugstein"],
+    "dependencies" : {
+        "openfl"        : "",
+        "openfl-native" : ""
+    }
+}
