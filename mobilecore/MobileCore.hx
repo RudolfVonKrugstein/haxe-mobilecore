@@ -1,4 +1,4 @@
-package de.woodengames.mobilecore;
+package mobilecore;
 
 #if android
 import openfl.utils.JNI;
@@ -11,14 +11,14 @@ class MobileCore {
     for (a in adUnits) {
       adUnitsFlags = adUnitsFlags & a;
     }
-    _init(hash, adUnitsFlags);
+    _init(hash, logType, adUnitsFlags);
   }
 
   // Init all jni variables
   private static function initJNI() {
-    var getMethod = JNI.createStaticMethod;
+    var getMethod = JNI.createStaticMethod.bind("org/haxe/extension/Haxe_mobilecore");
     if (_init == null) {
-      _init = getMethod("de/woodengames/MobileCore", "init", "(Ljava/lang/String;I)V");
+      _init = getMethod("init", "(Ljava/lang/String;I;I)V;");
     }
   }
 
@@ -27,8 +27,10 @@ class MobileCore {
 
 #end
 
-enum LogType {
-  DEBUG;
+@:enum
+abstract LogType(Int) to Int {
+  var DEBUG = 1;
+  var PRODUCTION = 2;
 }
 
 @:enum

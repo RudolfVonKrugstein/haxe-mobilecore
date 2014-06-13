@@ -1,8 +1,7 @@
 package;
 
-
 import openfl.display.Sprite;
-import de.woodengames.mobilecore.MobileCore;
+import mobilecore.MobileCore;
 
 class Main extends Sprite {
 	
@@ -10,6 +9,4 @@ class Main extends Sprite {
 		super ();
         MobileCore.init("55",DEBUG, [ALL_UNITS]);
 	}
-	
-	
 }
