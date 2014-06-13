@@ -37,7 +37,7 @@ import com.ironsource.mobilcore.MobileCore;
    function for performing a single task, like returning a value
    back to Haxe from Java.
    */
-public class Haxe_mobilecore extends Extension {
+public class HaxeMobileCore extends Extension {
 
   private static boolean _showOnPause;
   private static Bundle _saveInstanceState;
