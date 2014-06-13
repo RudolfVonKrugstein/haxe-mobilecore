@@ -16,7 +16,7 @@ class MobileCore {
 
   // Init all jni variables
   private static function initJNI() {
-    var getMethod = JNI.createStaticMethod.bind("org/haxe/extension/Haxe_mobilecore");
+    var getMethod = JNI.createStaticMethod.bind("org/haxe/extension/HaxeMobileCore");
     if (_init == null) {
       _init = getMethod("init", "(Ljava/lang/String;I;I)V;");
     }

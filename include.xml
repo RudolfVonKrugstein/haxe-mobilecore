@@ -4,6 +4,6 @@
 	<!-- Use the following for an Android Java extension, not needed otherwise -->
 	
 	<dependency name="haxe_mobilecore" path="dependencies/android" if="android" />
-	<android extension="org.haxe.extension.Haxe_mobilecore" />
+	<android extension="org.haxe.extension.HaxeMobileCore" />
 	
 </project>
