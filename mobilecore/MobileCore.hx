@@ -21,7 +21,33 @@ class MobileCore {
   }
 
   public static function isOfferwallReady() : Bool {
+    initJNI();
     return _isOfferwallReady();
+  }
+
+  public static function showStickee() {
+    initJNI();
+    _showStickee();
+  }
+
+  public static function hideStickee() {
+    initJNI();
+    _hideStickee();
+  }
+
+  public static function isStickeeShowing() : Bool {
+    initJNI();
+    return _isStickeeShowing();
+  }
+
+  public static function isStickeeReady() : Bool {
+    initJNI();
+    return _isStickeeReady();
+  }
+
+  public static function setStickeezReadyListener(cb : Void -> Void) {
+    initJNI();
+    _setStickeezReadyListener(new CallbackHolder(cb));
   }
 
   // Init all jni variables
@@ -36,11 +62,31 @@ class MobileCore {
     if (_isOfferwallReady == null) {
       _isOfferwallReady = getMethod("isOfferwallReady","()Z");
     }
+    if (_showStickee == null) {
+      _showStickee = getMethod("showStickee", "()V");
+    }
+    if (_hideStickee == null) {
+      _hideStickee = getMethod("hideStickee", "()V");
+    }
+    if (_isStickeeShowing == null) {
+      _isStickeeShowing = getMethod("isStickeeShowing", "()Z");
+    }
+    if (_isStickeeReady == null) {
+      _isStickeeReady = getMethod("isStickeeReady", "()Z");
+    }
+    if (_setStickeezReadyListener == null) {
+      _setStickeezReadyListener = getMethod("setStickeezReadyListener", "(Lorg/haxe/lime/HaxeObject;)V");
+    }
   }
 
   private static var _init : Dynamic = null;
   private static var _showOfferWall : Dynamic = null;
   private static var _isOfferwallReady : Dynamic = null;
+  private static var _showStickee : Dynamic = null;
+  private static var _hideStickee : Dynamic = null;
+  private static var _isStickeeShowing : Dynamic = null;
+  private static var _isStickeeReady : Dynamic = null;
+  private static var _setStickeezReadyListener : Dynamic = null;
 }
 
 private class CallbackHolder {

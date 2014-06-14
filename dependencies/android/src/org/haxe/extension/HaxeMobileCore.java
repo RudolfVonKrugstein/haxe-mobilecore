@@ -14,6 +14,7 @@ import org.haxe.lime.HaxeObject;
 
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.CallbackResponse;
+import com.ironsource.mobilcore.OnReadyListener;
 
 /* 
    You can use the Android Extension class in order to hook
@@ -213,4 +214,43 @@ public class HaxeMobileCore extends Extension {
     return MobileCore.isOfferwallReady();
   }
 
+  public static void showStickee() {
+    mainActivity.runOnUiThread(new Runnable() {
+      public void run() {
+        MobileCore.showStickee(mainActivity);
+      }
+    });
+  }
+
+  public static void hideStickee() {
+    mainActivity.runOnUiThread(new Runnable() {
+      public void run() {
+        MobileCore.hideStickee();
+      }
+    });
+  }
+
+  public static boolean isStickeeShowing() {
+    return MobileCore.isStickeeShowing();
+  }
+
+  public static boolean isStickeeReady() {
+    return MobileCore.isStickeeReady();
+  }
+
+  public static void setStickeezReadyListener(final HaxeObject callback) {
+    final OnReadyListener readyListener = new OnReadyListener() {
+      @Override
+      public void onReady(MobileCore.AD_UNITS adUnit) {
+        if (adUnit.equals(MobileCore.AD_UNITS.STICKEEZ)){
+          callback.call0("callback");
+        }
+      }
+    };
+    mainActivity.runOnUiThread(new Runnable() {
+      public void run() {
+        MobileCore.setStickeezReadyListener(readyListener);
+      }
+    });
+  }
 }
