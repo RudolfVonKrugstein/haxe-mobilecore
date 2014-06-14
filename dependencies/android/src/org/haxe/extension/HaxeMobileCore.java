@@ -8,8 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.util.Log;
+
+import org.haxe.lime.HaxeObject;
 
 import com.ironsource.mobilcore.MobileCore;
+import com.ironsource.mobilcore.CallbackResponse;
 
 /* 
    You can use the Android Extension class in order to hook
@@ -134,7 +138,7 @@ public class HaxeMobileCore extends Extension {
   final private static int AD_DIRECT_TO_MARKET = 8;
   final private static int AD_ALL = 16;
 
-  public static void init(String devHash, int logType, int adUnits)
+  public static void init(final String devHash, int logType, int adUnits)
   {
     // Build a list of wanted ad units
     int numAdUnits = 0;
@@ -160,16 +164,49 @@ public class HaxeMobileCore extends Extension {
     if ( (adUnits & AD_ALL) == AD_ALL) {
       adArray[c] = MobileCore.AD_UNITS.ALL_UNITS; ++c;
     }
-    MobileCore.LOG_TYPE lt = MobileCore.LOG_TYPE.DEBUG;
-    if (logType == 2) {
-      lt = MobileCore.LOG_TYPE.PRODUCTION;
-    }
-    MobileCore.init(mainActivity, devHash, lt, adArray);
 
+    final MobileCore.LOG_TYPE lt = (logType == 2)?MobileCore.LOG_TYPE.PRODUCTION:MobileCore.LOG_TYPE.DEBUG;
+    final MobileCore.AD_UNITS[] finalAdArray = adArray;
+
+    mainActivity.runOnUiThread(new Runnable() {
+      public void run() {
+        //MobileCore.init(mainActivity, devHash, lt, finalAdArray);
+        switch(finalAdArray.length) {
+          case 1:
+            MobileCore.init(mainActivity, devHash, lt, finalAdArray[0]);
+            break;
+          case 2:
+            MobileCore.init(mainActivity, devHash, lt, finalAdArray[0], finalAdArray[1]);
+            break;
+          case 3:
+            MobileCore.init(mainActivity, devHash, lt, finalAdArray[0], finalAdArray[1], finalAdArray[2]);
+            break;
+          case 4:
+            MobileCore.init(mainActivity, devHash, lt, finalAdArray[0], finalAdArray[1], finalAdArray[2], finalAdArray[3]);
+            break;
+          case 5:
+            MobileCore.init(mainActivity, devHash, lt, finalAdArray[0], finalAdArray[1], finalAdArray[2], finalAdArray[3], finalAdArray[4]);
+            break;
+          default:
+            MobileCore.init(mainActivity, devHash, lt, MobileCore.AD_UNITS.ALL_UNITS);
+            break;
+        }
+      }
+    });
   }
 
-  public static void showOfferWall() {
-    MobileCore.showOfferWall(mainActivity, null);
+  public static void showOfferWall(final HaxeObject callback, final boolean showToast) {
+    final CallbackResponse callbackResponse = new CallbackResponse() {
+      @Override
+      public void onConfirmation(TYPE confirmationType) {
+        callback.call0("callback");
+      }
+    };
+    mainActivity.runOnUiThread(new Runnable() {
+      public void run() {
+        MobileCore.showOfferWall(mainActivity, callbackResponse, showToast);
+      }
+    });
   }
 
   public static boolean isOfferwallReady() {

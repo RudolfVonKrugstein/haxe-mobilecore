@@ -1,12 +1,11 @@
 package;
 
-import openfl.display.Sprite;
 import mobilecore.MobileCore;
 
-class Main extends Sprite {
+class Main {
 	
-	public function new () {
-		super ();
-        MobileCore.init("55",DEBUG, [ALL_UNITS]);
+	static public function main () {
+        MobileCore.init("55",DEBUG, [OFFERWALL]);
+        MobileCore.showOfferWall();
 	}
 }
