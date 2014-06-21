@@ -101,6 +101,38 @@ private class CallbackHolder {
   }
 }
 
+#else
+
+// Alternative implementation doing nothing
+class MobileCore {
+  public static function init(hash : String, logType : LogType, adUnits : Array<AdUnit>) {
+  }
+
+  public static function showOfferWall(cb : Void -> Void = null, showToast : Bool = false) {
+  }
+
+  public static function isOfferwallReady() : Bool {
+    return false;
+  }
+
+  public static function showStickee() {
+  }
+
+  public static function hideStickee() {
+  }
+
+  public static function isStickeeShowing() : Bool {
+    return false;
+  }
+
+  public static function isStickeeReady() : Bool {
+    return false;
+  }
+
+  public static function setStickeezReadyListener(cb : Void -> Void) {
+  }
+}
+
 #end
 
 @:enum
