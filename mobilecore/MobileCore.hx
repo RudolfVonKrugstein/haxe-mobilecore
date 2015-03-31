@@ -14,15 +14,15 @@ class MobileCore {
     _init(hash, logType, adUnitsFlags);
   }
 
-  public static function showOfferWall(cb : Void -> Void = null, showToast : Bool = false) {
+  public static function showInterstitial(cb : Void -> Void = null, position : InterstitialPosition = NOT_SET) {
     initJNI();
 
-    _showOfferWall(new CallbackHolder(cb), showToast);
+    _showInterstitial(new CallbackHolder(cb), position);
   }
 
-  public static function isOfferwallReady() : Bool {
+  public static function isInterstitialReady() : Bool {
     initJNI();
-    return _isOfferwallReady();
+    return _isInterstitialReady();
   }
 
   public static function showStickee() {
@@ -30,8 +30,7 @@ class MobileCore {
     _showStickee();
   }
 
-  public static function hideStickee() {
-    initJNI();
+  public static function hideStickee() { initJNI();
     _hideStickee();
   }
 
@@ -56,11 +55,11 @@ class MobileCore {
     if (_init == null) {
       _init = getMethod("init", "(Ljava/lang/String;II)V");
     }
-    if (_showOfferWall == null) {
-      _showOfferWall = getMethod("showOfferWall", "(Lorg/haxe/lime/HaxeObject;Z)V");
+    if (_showInterstitial == null) {
+      _showInterstitial = getMethod("showInterstitial", "(Lorg/haxe/lime/HaxeObject;I)V");
     }
-    if (_isOfferwallReady == null) {
-      _isOfferwallReady = getMethod("isOfferwallReady","()Z");
+    if (_isInterstitialReady == null) {
+      _isInterstitialReady = getMethod("isInterstitialReady","()Z");
     }
     if (_showStickee == null) {
       _showStickee = getMethod("showStickee", "()V");
@@ -80,8 +79,8 @@ class MobileCore {
   }
 
   private static var _init : Dynamic = null;
-  private static var _showOfferWall : Dynamic = null;
-  private static var _isOfferwallReady : Dynamic = null;
+  private static var _showInterstitial : Dynamic = null;
+  private static var _isInterstitialReady : Dynamic = null;
   private static var _showStickee : Dynamic = null;
   private static var _hideStickee : Dynamic = null;
   private static var _isStickeeShowing : Dynamic = null;
@@ -108,10 +107,10 @@ class MobileCore {
   public static function init(hash : String, logType : LogType, adUnits : Array<AdUnit>) {
   }
 
-  public static function showOfferWall(cb : Void -> Void = null, showToast : Bool = false) {
+  public static function showInterstitial(cb : Void -> Void = null, showToast : Bool = false) {
   }
 
-  public static function isOfferwallReady() : Bool {
+  public static function isInterstitialReady() : Bool {
     return false;
   }
 
@@ -144,8 +143,19 @@ abstract LogType(Int) to Int {
 @:enum
 abstract AdUnit(Int) to Int {
   var STICKEEZ  = 1;
-  var SLIDER    = 2;
-  var OFFERWALL = 4;
+  var NATIVE_ADS    = 2;
+  var INTERSTITIAL = 4;
   var DIRECT_TO_MARKET = 8;
   var ALL_UNITS = 16;
+}
+
+@:enum
+abstract InterstitialPosition(Int) to Int {
+  var APP_START = 1;
+  var APP_EXIT  = 2;
+  var APP_BUTTON_CLICK = 3;
+  var GAME_LEVEL_END_WIN = 4;
+  var GAME_LEVEL_END_LOSE = 5;
+  var CUSTOM = 6;
+  var NOT_SET = 7;
 }

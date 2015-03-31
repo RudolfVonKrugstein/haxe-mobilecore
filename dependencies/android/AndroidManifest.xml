@@ -2,16 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.haxe.extension" >
 
   <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
 
   <application>
-    <service android:name="com.ironsource.mobilcore.MobileCoreReport" android:enabled="true" 
-      android:exported="false" android:process=":mcServiceProcess"></service> 
+    <service android:name="com.ironsource.mobilcore.MobileCoreReport"
+      android:enabled="true" 
+      android:exported="false"
+      android:process=":mcServiceProcess">
+    </service> 
     <receiver android:name="com.ironsource.mobilcore.InstallationTracker"
-      android:enabled="true" android:process=":installationTracker"></receiver>
+      android:enabled="true"
+      android:process=":installationTracker">
+    </receiver>
   </application>
 
+  <activity
+    android:name="com.ironsource.mobilcore.InterstitialVideoActivity"
+    android:configChanges="keyboardHidden|orientation|screenSize"
+    android:keepScreenOn="true"/>
 </manifest>

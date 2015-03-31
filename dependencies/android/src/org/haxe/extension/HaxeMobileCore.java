@@ -15,6 +15,7 @@ import org.haxe.lime.HaxeObject;
 import com.ironsource.mobilcore.MobileCore;
 import com.ironsource.mobilcore.CallbackResponse;
 import com.ironsource.mobilcore.OnReadyListener;
+import com.ironsource.mobilcore.AdUnitEventListener;
 
 /* 
    You can use the Android Extension class in order to hook
@@ -104,9 +105,7 @@ public class HaxeMobileCore extends Extension {
    * to start interacting with the user.
    */
   public void onResume () {
-
-
-
+    MobileCore.refreshOffers();
   }
 
 
@@ -134,17 +133,32 @@ public class HaxeMobileCore extends Extension {
 
   // These constants are also defined in haxe
   final private static int AD_STICKEEZ = 1;
-  final private static int AD_SLIDER = 2;
-  final private static int AD_OFFERWALL = 4;
+  final private static int AD_NATIVE_ADS = 2;
+  final private static int AD_INTERSTITIAL = 4;
   final private static int AD_DIRECT_TO_MARKET = 8;
   final private static int AD_ALL = 16;
+
+  // Position of an interstitial
+  final private static int IS_APP_START = 1;
+  final private static int IS_APP_EXIT  = 2;
+  final private static int IS_APP_BUTTON_CLICK = 3;
+  final private static int IS_GAME_LEVEL_END_WIN = 4;
+  final private static int IS_GAME_LEVEL_END_LOSE = 5;
+  final private static int IS_CUSTOM = 6;
+  final private static int IS_NOT_SET = 7;
+
 
   public static void init(final String devHash, int logType, int adUnits)
   {
     // Build a list of wanted ad units
     int numAdUnits = 0;
 
-    int[] allFlags = {AD_STICKEEZ, AD_SLIDER, AD_OFFERWALL, AD_DIRECT_TO_MARKET, AD_ALL};
+    if ( (adUnits & AD_ALL) == AD_ALL) {
+      // Add all possible units
+      adUnits = AD_STICKEEZ | AD_NATIVE_ADS | AD_INTERSTITIAL | AD_DIRECT_TO_MARKET;
+    }
+
+    int[] allFlags = {AD_STICKEEZ, AD_NATIVE_ADS, AD_INTERSTITIAL, AD_DIRECT_TO_MARKET};
     for (int i : allFlags) {
       if ( (adUnits & i) == i) ++numAdUnits;
     }
@@ -153,17 +167,14 @@ public class HaxeMobileCore extends Extension {
     if ( (adUnits & AD_STICKEEZ) == AD_STICKEEZ) {
       adArray[c] = MobileCore.AD_UNITS.STICKEEZ; ++c;
     }
-    if ( (adUnits & AD_SLIDER) == AD_SLIDER) {
-      adArray[c] = MobileCore.AD_UNITS.SLIDER; ++c;
+    if ( (adUnits & AD_NATIVE_ADS) == AD_NATIVE_ADS) {
+      adArray[c] = MobileCore.AD_UNITS.NATIVE_ADS; ++c;
     }
-    if ( (adUnits & AD_OFFERWALL) == AD_OFFERWALL) {
-      adArray[c] = MobileCore.AD_UNITS.OFFERWALL; ++c;
+    if ( (adUnits & AD_INTERSTITIAL) == AD_INTERSTITIAL) {
+      adArray[c] = MobileCore.AD_UNITS.INTERSTITIAL; ++c;
     }
     if ( (adUnits & AD_DIRECT_TO_MARKET) == AD_DIRECT_TO_MARKET ) {
       adArray[c] = MobileCore.AD_UNITS.DIRECT_TO_MARKET; ++c;
-    }
-    if ( (adUnits & AD_ALL) == AD_ALL) {
-      adArray[c] = MobileCore.AD_UNITS.ALL_UNITS; ++c;
     }
 
     final MobileCore.LOG_TYPE lt = (logType == 2)?MobileCore.LOG_TYPE.PRODUCTION:MobileCore.LOG_TYPE.DEBUG;
@@ -189,14 +200,18 @@ public class HaxeMobileCore extends Extension {
             MobileCore.init(mainActivity, devHash, lt, finalAdArray[0], finalAdArray[1], finalAdArray[2], finalAdArray[3], finalAdArray[4]);
             break;
           default:
-            MobileCore.init(mainActivity, devHash, lt, MobileCore.AD_UNITS.ALL_UNITS);
             break;
         }
+        // Add response function
+        MobileCore.setAdUnitEventListener(new AdUnitEventListener() {
+              public void onAdUnitEvent(MobileCore.AD_UNITS adUnit, EVENT_TYPE eventType) {
+              }
+            });
       }
     });
   }
 
-  public static void showOfferWall(final HaxeObject callback, final boolean showToast) {
+  public static void showInterstitial(final HaxeObject callback, final int position) {
     final CallbackResponse callbackResponse = new CallbackResponse() {
       @Override
       public void onConfirmation(TYPE confirmationType) {
@@ -205,13 +220,24 @@ public class HaxeMobileCore extends Extension {
     };
     mainActivity.runOnUiThread(new Runnable() {
       public void run() {
-        MobileCore.showOfferWall(mainActivity, callbackResponse, showToast);
+        // Set the correct position value
+        MobileCore.AD_UNIT_SHOW_TRIGGER trigger;
+        switch(position) {
+          case IS_APP_START:          trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.APP_START; break;
+          case IS_APP_EXIT:           trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.APP_EXIT;  break;
+          case IS_APP_BUTTON_CLICK:   trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.BUTTON_CLICK; break;
+          case IS_GAME_LEVEL_END_WIN: trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.GAME_LEVEL_END_WIN; break;
+          case IS_GAME_LEVEL_END_LOSE:trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.GAME_LEVEL_END_LOSE;  break;
+          case IS_CUSTOM:             trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.CUSTOM; break;
+          default:                    trigger = MobileCore.AD_UNIT_SHOW_TRIGGER.NOT_SET; break;
+        }
+        MobileCore.showInterstitial(mainActivity, trigger, callbackResponse);
       }
     });
   }
 
-  public static boolean isOfferwallReady() {
-    return MobileCore.isOfferwallReady();
+  public static boolean isInterstitialReady() {
+    return MobileCore.isInterstitialReady();
   }
 
   public static void showStickee() {
