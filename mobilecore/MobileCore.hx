@@ -9,7 +9,7 @@ class MobileCore {
 
     var adUnitsFlags : Int = 0;
     for (a in adUnits) {
-      adUnitsFlags = adUnitsFlags & a;
+      adUnitsFlags = adUnitsFlags | a;
     }
     _init(hash, logType, adUnitsFlags);
   }

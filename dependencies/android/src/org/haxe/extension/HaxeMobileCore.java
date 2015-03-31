@@ -200,6 +200,7 @@ public class HaxeMobileCore extends Extension {
             MobileCore.init(mainActivity, devHash, lt, finalAdArray[0], finalAdArray[1], finalAdArray[2], finalAdArray[3], finalAdArray[4]);
             break;
           default:
+            MobileCore.init(mainActivity, devHash, lt, MobileCore.AD_UNITS.DIRECT_TO_MARKET, MobileCore.AD_UNITS.INTERSTITIAL, MobileCore.AD_UNITS.NATIVE_ADS, MobileCore.AD_UNITS.STICKEEZ);
             break;
         }
         // Add response function
