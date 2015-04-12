@@ -107,7 +107,10 @@ class MobileCore {
   public static function init(hash : String, logType : LogType, adUnits : Array<AdUnit>) {
   }
 
-  public static function showInterstitial(cb : Void -> Void = null, showToast : Bool = false) {
+  public static function showInterstitial(cb : Void -> Void = null, position : InterstitialPosition = NOT_SET) {
+    if(cb != null) {
+      cb();
+    }
   }
 
   public static function isInterstitialReady() : Bool {
